@@ -2,23 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  h1 {
-    @apply text-2xl;
-  }
-  h2 {
-    @apply text-xl;
-  }
-  h3 {
-    @apply text-lg;
-  }
-  a {
-    @apply text-blue-600 underline;
-  }
-}
-
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+@layer components {
+  .dashboard-link {
+    @apply flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 transition-colors duration-200;
+  }
+
+  .stats-card {
+    @apply bg-white rounded-lg shadow p-6 transition-transform duration-200 hover:transform hover:scale-105;
+  }
 }
