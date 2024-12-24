@@ -30,6 +30,7 @@
     "sanitize-html": "^2.14.0",
     "sonner": "^1.7.1",
     "sort-by": "^1.2.0",
+    "sweetalert2": "^11.15.3",
     "zod": "^3.24.1"
   },
   "devDependencies": {

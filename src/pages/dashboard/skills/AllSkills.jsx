@@ -3,10 +3,16 @@ import { useAllSkillsQuery } from '../../../redux/features/services/SkillsApi';
 import { Box, Button, TextField, Typography } from '@mui/material';
 import SkillCard from '../../../component/ui/SkillCard';
 import { FaPlus, FaSearch } from 'react-icons/fa';
+import CreateSkillModal from '../../../component/ui/CreateSkillModal';
 
 const AllSkills = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const { data: allSkills, isLoading } = useAllSkillsQuery();
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
 
   const filteredData = allSkills?.data?.filter((skill) =>
     skill?.technology_name?.toLowerCase().includes(searchTerm.toLowerCase())
@@ -24,12 +30,17 @@ const AllSkills = () => {
         <Typography variant="h4" component={'h4'}>
           All Skills ({allSkills?.data?.length})
         </Typography>
-        <Button variant="contained" color="primary" startIcon={<FaPlus />}>
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<FaPlus />}
+          onClick={handleClickOpen}
+        >
           Add New Skill
         </Button>
       </Box>
       {/* Search */}
-      <div className="bg-white p-4 rounded-lg shadow-sm my-5">
+      <div className="bg-white p-4 rounded-lg shadow-sm my-7">
         <div className="relative">
           <TextField
             type="text"
@@ -38,14 +49,15 @@ const AllSkills = () => {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-          <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
         </div>
       </div>
-      <div className="px-2 lg:px-4 py-8 grid grid-cols-3 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-6">
+      <div className="px-2 lg:px-4 py-8 grid grid-cols-3 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-6">
         {filteredData?.map((skill) => (
           <SkillCard skill={skill} key={skill?._id} />
         ))}
       </div>
+
+      <CreateSkillModal open={open} setOpen={setOpen} />
     </div>
   );
 };

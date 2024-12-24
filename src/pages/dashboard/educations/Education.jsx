@@ -55,14 +55,15 @@ const Education = () => {
 
       {/* Search */}
       <div className="bg-white p-4 rounded-lg shadow-sm">
-        <TextField
-          fullWidth
-          variant="outlined"
-          size="small"
-          placeholder="Search education..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
+        <div className="relative">
+          <TextField
+            type="text"
+            placeholder="Search experiences..."
+            className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
       </div>
 
       {/* Education Cards */}
