@@ -11,6 +11,7 @@ import {
   FaBars,
   FaTimes,
 } from 'react-icons/fa';
+import { FaGraduationCap } from 'react-icons/fa6';
 import { useState, useEffect } from 'react';
 
 const Sidebar = () => {
@@ -26,6 +27,11 @@ const Sidebar = () => {
       path: '/dashboard/projects',
       icon: <FaProjectDiagram />,
       title: 'Projects',
+    },
+    {
+      path: '/dashboard/education',
+      icon: <FaGraduationCap />,
+      title: 'Education',
     },
     {
       path: '/dashboard/experience',

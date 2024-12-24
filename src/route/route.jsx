@@ -9,6 +9,7 @@ import AllProjects from '../pages/dashboard/projects/AllProjects';
 import AllBlogs from '../pages/dashboard/blogs/AllBlogs';
 import Experiences from '../pages/dashboard/expeerience/Experiences';
 import About from '../pages/dashboard/about/About';
+import Education from '../pages/dashboard/educations/Education';
 
 const router = createBrowserRouter([
   {
@@ -45,6 +46,10 @@ const router = createBrowserRouter([
       {
         path: 'projects',
         element: <AllProjects />,
+      },
+      {
+        path: 'education',
+        element: <Education />,
       },
       {
         path: 'experience',

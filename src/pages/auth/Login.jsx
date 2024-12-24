@@ -1,15 +1,16 @@
 import React from 'react';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../../redux/features/Slice/AuthSlice';
 import { Navigate, useNavigate } from 'react-router-dom';
 import PForm from '../../component/form/PForm';
 import PInput from '../../component/form/PInput';
 import { useUserLoginMutation } from '../../redux/features/services/AuthApi';
+import { useDispatch, useSelector } from 'react-redux';
 
 const Login = () => {
-  const token = useSelector((state) => state.auth);
+  const { token } = useSelector((state) => state.auth);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const schema = z.object({
@@ -25,8 +26,8 @@ const Login = () => {
     try {
       const result = await userLogin(data).unwrap();
 
-      if (result?.access_token) {
-        dispatch(login({ token: result?.access_token }));
+      if (result?.success) {
+        dispatch(login({ token: result.data.Access_Token }));
         navigate('/dashboard');
       }
     } catch (error) {
