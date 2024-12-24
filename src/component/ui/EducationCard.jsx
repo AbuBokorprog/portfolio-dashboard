@@ -1,7 +1,31 @@
+import moment from 'moment';
 import { FaEdit, FaTrash, FaGraduationCap } from 'react-icons/fa';
+import { useDeleteEducationMutation } from '../../redux/features/services/EducationApi';
 
 const EducationCard = ({ education }) => {
-  const { degree, institution, duration, grade, field, location } = education;
+  const {
+    degree,
+    institute_name,
+    startTime,
+    endTime,
+    grade,
+    _id,
+    field,
+    institute_location,
+    isPresent,
+  } = education;
+
+  const [deleteEducation] = useDeleteEducationMutation();
+  const deleteExperienceHandler = async (id) => {
+    try {
+      const res = await deleteEducation(id).unwrap();
+      if (res?.success) {
+        alert(res?.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
@@ -12,9 +36,17 @@ const EducationCard = ({ education }) => {
           </div>
           <div>
             <h3 className="text-lg font-semibold text-gray-800">{degree}</h3>
-            <p className="text-purple-600 font-medium">{institution}</p>
+            <p className="text-purple-600 font-medium">{institute_name}</p>
             <div className="flex flex-wrap gap-2 mt-2">
-              <span className="text-sm text-gray-600">{duration}</span>
+              <div className="flex items-center gap-1">
+                <span className="text-sm text-gray-600">
+                  {moment(startTime).format('MMMM YYYY')}
+                </span>
+                <span className="text-sm text-gray-600">•</span>
+                <span className="text-sm text-gray-600">
+                  {isPresent ? 'Present' : moment(endTime).format('MMMM, YYYY')}
+                </span>
+              </div>
               {grade && (
                 <>
                   <span className="text-sm text-gray-600">•</span>
@@ -24,7 +56,7 @@ const EducationCard = ({ education }) => {
                 </>
               )}
             </div>
-            <p className="text-sm text-gray-500 mt-2">{location}</p>
+            <p className="text-sm text-gray-500 mt-2">{institute_location}</p>
           </div>
         </div>
 
@@ -36,6 +68,7 @@ const EducationCard = ({ education }) => {
             <FaEdit />
           </button>
           <button
+            onClick={() => deleteExperienceHandler(_id)}
             className="p-2 text-red-500 hover:bg-red-50 rounded-full transition-colors"
             title="Delete"
           >

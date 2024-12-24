@@ -1,34 +1,41 @@
 import { baseApi } from '../baseApi';
 
-const experienceApi = baseApi.injectEndpoints({
+export const experienceApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    // query
-    allExperience: builder.query({
-      query: () => 'api/skills',
-      providesTags: ['skills'],
+    allExperiences: builder.query({
+      query: () => '/experience',
+      providesTags: ['experience'],
     }),
     // mutation
     createExperience: builder.mutation({
       query: (data) => ({
-        url: '/api/skills',
+        url: '/experience',
         method: 'POST',
         body: data,
       }),
-      invalidatesTags: ['skills'],
+      invalidatesTags: ['experience'],
     }),
-    editExperience: builder.mutation({
-      query: (data) => ({
-        url: '/api/skills',
-        method: 'PATCH',
+    updateExperience: builder.mutation({
+      query: ({ id, data }) => ({
+        url: `/experience/${id}`,
+        method: 'POST',
         body: data,
       }),
-      invalidatesTags: ['skills'],
+      invalidatesTags: ['experience'],
+    }),
+    deleteExperience: builder.mutation({
+      query: (id) => ({
+        url: `/experience/${id}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['experience'],
     }),
   }),
 });
 
 export const {
-  useAllExperienceQuery,
   useCreateExperienceMutation,
-  useEditExperienceMutation,
+  useAllExperiencesQuery,
+  useUpdateExperienceMutation,
+  useDeleteExperienceMutation,
 } = experienceApi;

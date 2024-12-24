@@ -17,6 +17,7 @@ import {
   Typography,
 } from '@mui/material';
 import { FaPlus, FaSearch } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
 const AllProjects = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -56,9 +57,11 @@ const AllProjects = () => {
         <Typography variant="h4" component={'h4'}>
           All Projects ({allProducts?.data?.length})
         </Typography>
-        <Button variant="contained" color="primary" startIcon={<FaPlus />}>
-          Add New Project
-        </Button>
+        <Link to={'/dashboard/create-project'}>
+          <Button variant="contained" color="primary" startIcon={<FaPlus />}>
+            Add New Project
+          </Button>
+        </Link>
       </Box>
       {/* Search */}
       <div className="bg-white p-4 rounded-lg shadow-sm my-5">
@@ -104,7 +107,7 @@ const AllProjects = () => {
           </Grid>
         </div>
       </div>
-      <div className="px-2 lg:px-4 py-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="px-2 lg:px-4 py-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
         {filteredData?.map((product) => (
           <ProductCard p={product} key={product?._id} />
         ))}

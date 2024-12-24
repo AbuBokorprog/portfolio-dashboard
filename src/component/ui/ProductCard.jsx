@@ -1,8 +1,38 @@
 import sanitizeHtml from 'sanitize-html';
-import { FaEdit, FaTrash, FaEye } from 'react-icons/fa';
+import { FaEdit, FaTrash } from 'react-icons/fa';
 import moment from 'moment';
+import Swal from 'sweetalert2';
+import { useDeleteProjectMutation } from '../../redux/features/services/ProjectsApi';
 
 const ProductCard = ({ p }) => {
+  const [deleteSkill] = useDeleteProjectMutation();
+
+  const deleteSkillHandler = async (id) => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to recover this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const res = await deleteSkill(id).unwrap();
+          if (res?.delete) {
+            Swal.fire({
+              title: 'Deleted!',
+              text: 'Your file has been deleted.',
+              icon: 'success',
+            });
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    });
+  };
   return (
     <div
       key={p?._id}
@@ -53,16 +83,10 @@ const ProductCard = ({ p }) => {
       {/* Action Buttons */}
       <div className="flex items-center justify-between">
         <span className="text-sm text-gray-500">
-          {moment().format('MMM Do YY', p?.createdAt)}
+          {moment(p?.createdAt).format('MMM Do YY')}
         </span>
 
         <div className="flex items-center space-x-3">
-          <button
-            className="p-2 text-blue-500 hover:bg-blue-50 rounded-full transition-colors"
-            title="View"
-          >
-            <FaEye />
-          </button>
           <button
             className="p-2 text-green-500 hover:bg-green-50 rounded-full transition-colors"
             title="Edit"
@@ -70,6 +94,7 @@ const ProductCard = ({ p }) => {
             <FaEdit />
           </button>
           <button
+            onClick={() => deleteSkillHandler(p?._id)}
             className="p-2 text-red-500 hover:bg-red-50 rounded-full transition-colors"
             title="Delete"
           >

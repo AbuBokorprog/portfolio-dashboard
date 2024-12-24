@@ -23,10 +23,10 @@ const SkillCard = ({ skill }) => {
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, delete it!',
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const res = deleteSkill(id).unwrap();
+          const res = await deleteSkill(id).unwrap();
           if (res?.delete) {
             Swal.fire({
               title: 'Deleted!',

@@ -10,6 +10,9 @@ import AllBlogs from '../pages/dashboard/blogs/AllBlogs';
 import Experiences from '../pages/dashboard/expeerience/Experiences';
 import About from '../pages/dashboard/about/About';
 import Education from '../pages/dashboard/educations/Education';
+import CreateProject from '../pages/dashboard/projects/CreateProject';
+import CreateExperience from '../pages/dashboard/expeerience/CreateExperience';
+import CreateEducation from '../pages/dashboard/educations/CreateEducation';
 
 const router = createBrowserRouter([
   {
@@ -48,12 +51,24 @@ const router = createBrowserRouter([
         element: <AllProjects />,
       },
       {
+        path: 'create-project',
+        element: <CreateProject />,
+      },
+      {
         path: 'education',
         element: <Education />,
       },
       {
+        path: 'create-education',
+        element: <CreateEducation />,
+      },
+      {
         path: 'experience',
         element: <Experiences />,
+      },
+      {
+        path: 'create-experience',
+        element: <CreateExperience />,
       },
       {
         path: 'blogs',

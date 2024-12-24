@@ -3,10 +3,12 @@ import Sidebar from '../component/navbar-footer/Sidebar';
 
 const Dashboard = () => {
   return (
-    <div className="flex min-h-screen bg-gray-100">
-      <Sidebar />
+    <div className="flex bg-gray-100">
+      <div className="md:fixed md:top-0 z-50">
+        <Sidebar />
+      </div>
 
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+      <div className="flex-1 md:ml-64 flex flex-col min-w-0 overflow-hidden">
         <header className="bg-white shadow-sm">
           <div className="px-6 py-4 md:ml-0 ml-16">
             <h1 className="text-xl font-semibold text-gray-800">
