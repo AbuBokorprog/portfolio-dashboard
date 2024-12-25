@@ -13,6 +13,7 @@ const EducationCard = ({ education }) => {
     field,
     institute_location,
     isPresent,
+    short_description,
   } = education;
 
   const [deleteEducation] = useDeleteEducationMutation();
@@ -84,6 +85,7 @@ const EducationCard = ({ education }) => {
           </p>
         </div>
       )}
+      <p className="text-sm text-gray-500 mt-2">{short_description}</p>
     </div>
   );
 };

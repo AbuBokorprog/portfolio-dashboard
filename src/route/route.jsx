@@ -13,6 +13,8 @@ import Education from '../pages/dashboard/educations/Education';
 import CreateProject from '../pages/dashboard/projects/CreateProject';
 import CreateExperience from '../pages/dashboard/expeerience/CreateExperience';
 import CreateEducation from '../pages/dashboard/educations/CreateEducation';
+import CreateBlog from '../pages/dashboard/blogs/CreateBlog';
+import EditBlog from '../pages/dashboard/blogs/EditBlog';
 
 const router = createBrowserRouter([
   {
@@ -73,6 +75,14 @@ const router = createBrowserRouter([
       {
         path: 'blogs',
         element: <AllBlogs />,
+      },
+      {
+        path: 'create-blogs',
+        element: <CreateBlog />,
+      },
+      {
+        path: 'edit-blogs/:id',
+        element: <EditBlog />,
       },
       {
         path: 'certificates',
