@@ -7,6 +7,10 @@ const blogApi = baseApi.injectEndpoints({
       query: () => '/blogs',
       providesTags: ['blogs'],
     }),
+    singleBlogs: builder.query({
+      query: (id) => `/blogs/${id}`,
+      providesTags: ['blogs'],
+    }),
     // mutation
     createBlog: builder.mutation({
       query: (data) => ({
@@ -39,4 +43,5 @@ export const {
   useEditBlogMutation,
   useAllBlogsQuery,
   useDeleteBlogMutation,
+  useSingleBlogsQuery,
 } = blogApi;

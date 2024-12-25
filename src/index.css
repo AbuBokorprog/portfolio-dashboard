@@ -8,6 +8,27 @@
   box-sizing: border-box;
 }
 
+/* Import Quill Snow Theme */
+
+/* Custom Styles */
+.ql-editor {
+  min-height: 300px;
+}
+
+.ql-color .ql-picker-options [data-value]::before {
+  content: ' ';
+  border-radius: 50%;
+  width: 14px;
+  height: 14px;
+}
+
+.ql-background .ql-picker-options [data-value]::before {
+  content: ' ';
+  border-radius: 50%;
+  width: 14px;
+  height: 14px;
+}
+
 @layer components {
   .dashboard-link {
     @apply flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 transition-colors duration-200;

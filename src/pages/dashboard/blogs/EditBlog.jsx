@@ -9,7 +9,12 @@ import {
 } from '@mui/material';
 import { useForm, Controller } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
-import { useEditBlogMutation } from '../../../redux/features/services/BlogsApi';
+import {
+  useEditBlogMutation,
+  useSingleBlogsQuery,
+} from '../../../redux/features/services/BlogsApi';
+import RichTextEditor from '../../../component/RichTextEditor';
+import { useState } from 'react';
 
 // Predefined categories for blogs
 const blogCategories = [
@@ -29,6 +34,7 @@ const blogCategories = [
 
 const EditBlog = () => {
   const { id } = useParams();
+  const [content, setContent] = useState('');
   const {
     register,
     handleSubmit,
@@ -37,6 +43,7 @@ const EditBlog = () => {
     formState: { errors },
   } = useForm();
 
+  const { data } = useSingleBlogsQuery(id);
   const [updateBlog] = useEditBlogMutation();
 
   const onSubmit = async (data) => {
@@ -51,7 +58,7 @@ const EditBlog = () => {
         JSON.stringify({
           title: data.title,
           category: data.category,
-          description: data.description,
+          description: content,
         })
       );
 
@@ -141,7 +148,7 @@ const EditBlog = () => {
             />
 
             {/* Blog Description */}
-            <TextField
+            {/* <TextField
               label="Blog Description"
               multiline
               rows={8}
@@ -158,8 +165,9 @@ const EditBlog = () => {
                 errors.description?.message ||
                 'Write your blog content here (minimum 100 characters)'
               }
-            />
-
+            /> */}
+            <p>Write your blog content here (minimum 100 characters)</p>
+            <RichTextEditor content={content} setContent={setContent} />
             {/* Submit Button */}
             <Box sx={{ mt: 2 }}>
               <Button

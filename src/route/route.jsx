@@ -18,6 +18,7 @@ import EditBlog from '../pages/dashboard/blogs/EditBlog';
 import EditExperience from '../pages/dashboard/expeerience/EditExperience';
 import EditEducation from '../pages/dashboard/educations/EditEducation';
 import EditProject from '../pages/dashboard/projects/EditProject';
+import Playground from '../pages/playground';
 
 const router = createBrowserRouter([
   {
@@ -98,6 +99,10 @@ const router = createBrowserRouter([
       {
         path: 'edit-blogs/:id',
         element: <EditBlog />,
+      },
+      {
+        path: 'playground',
+        element: <Playground />,
       },
       {
         path: 'certificates',

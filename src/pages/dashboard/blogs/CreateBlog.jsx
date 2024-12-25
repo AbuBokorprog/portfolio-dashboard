@@ -9,6 +9,8 @@ import {
 } from '@mui/material';
 import { useForm, Controller } from 'react-hook-form';
 import { useCreateBlogMutation } from '../../../redux/features/services/BlogsApi';
+import RichTextEditor from '../../../component/RichTextEditor';
+import { useState } from 'react';
 
 // Predefined categories for blogs
 const blogCategories = [
@@ -27,6 +29,8 @@ const blogCategories = [
 ];
 
 const CreateBlog = () => {
+  const [content, setContent] = useState('');
+
   const {
     register,
     handleSubmit,
@@ -38,6 +42,9 @@ const CreateBlog = () => {
   const [createBlog] = useCreateBlogMutation();
 
   const onSubmit = async (data) => {
+    if (!content) {
+      alert('Please Description is required!');
+    }
     try {
       const formData = new FormData();
       formData.append('file', data.thumbnail[0]);
@@ -46,7 +53,7 @@ const CreateBlog = () => {
         JSON.stringify({
           title: data.title,
           category: data.category,
-          description: data.description,
+          description: content,
         })
       );
 
@@ -136,7 +143,7 @@ const CreateBlog = () => {
             />
 
             {/* Blog Description */}
-            <TextField
+            {/* <TextField
               label="Blog Description"
               multiline
               rows={8}
@@ -153,7 +160,9 @@ const CreateBlog = () => {
                 errors.description?.message ||
                 'Write your blog content here (minimum 100 characters)'
               }
-            />
+            /> */}
+            <p>Write your blog content here (minimum 100 characters)</p>
+            <RichTextEditor content={content} setContent={setContent} />
 
             {/* Submit Button */}
             <Box sx={{ mt: 2 }}>
