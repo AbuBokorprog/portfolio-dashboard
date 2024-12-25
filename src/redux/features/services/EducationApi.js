@@ -6,6 +6,10 @@ export const educationApi = baseApi.injectEndpoints({
       query: () => '/education',
       providesTags: ['education'],
     }),
+    singleEducations: builder.query({
+      query: (id) => `/education/${id}`,
+      providesTags: ['education'],
+    }),
     createEducation: builder.mutation({
       query: (data) => ({
         url: '/education',
@@ -17,7 +21,7 @@ export const educationApi = baseApi.injectEndpoints({
     updateEducation: builder.mutation({
       query: ({ id, data }) => ({
         url: `/education/${id}`,
-        method: 'POST',
+        method: 'PUT',
         body: data,
       }),
       invalidatesTags: ['education'],
@@ -35,6 +39,7 @@ export const educationApi = baseApi.injectEndpoints({
 export const {
   useCreateEducationMutation,
   useAllEducationsQuery,
+  useSingleEducationsQuery,
   useUpdateEducationMutation,
   useDeleteEducationMutation,
 } = educationApi;

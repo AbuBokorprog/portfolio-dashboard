@@ -15,6 +15,8 @@ import CreateExperience from '../pages/dashboard/expeerience/CreateExperience';
 import CreateEducation from '../pages/dashboard/educations/CreateEducation';
 import CreateBlog from '../pages/dashboard/blogs/CreateBlog';
 import EditBlog from '../pages/dashboard/blogs/EditBlog';
+import EditExperience from '../pages/dashboard/expeerience/EditExperience';
+import EditEducation from '../pages/dashboard/educations/EditEducation';
 
 const router = createBrowserRouter([
   {
@@ -65,12 +67,20 @@ const router = createBrowserRouter([
         element: <CreateEducation />,
       },
       {
+        path: 'edit-education/:id',
+        element: <EditEducation />,
+      },
+      {
         path: 'experience',
         element: <Experiences />,
       },
       {
         path: 'create-experience',
         element: <CreateExperience />,
+      },
+      {
+        path: 'edit-experience/:id',
+        element: <EditExperience />,
       },
       {
         path: 'blogs',

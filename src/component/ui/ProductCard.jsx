@@ -3,11 +3,12 @@ import { FaEdit, FaTrash } from 'react-icons/fa';
 import moment from 'moment';
 import Swal from 'sweetalert2';
 import { useDeleteProjectMutation } from '../../redux/features/services/ProjectsApi';
+import { Link } from 'react-router-dom';
 
 const ProductCard = ({ p }) => {
   const [deleteSkill] = useDeleteProjectMutation();
 
-  const deleteSkillHandler = async (id) => {
+  const deleteProjectHandler = async (id) => {
     Swal.fire({
       title: 'Are you sure?',
       text: "You won't be able to recover this!",
@@ -87,18 +88,20 @@ const ProductCard = ({ p }) => {
         </span>
 
         <div className="flex items-center space-x-3">
+          <Link to={`/dashboard/edit-project/${p?._id}`}>
+            <button
+              className="p-2 text-green-500 hover:bg-green-50 rounded-full transition-colors"
+              title="Edit"
+            >
+              <FaEdit className="size-6" />
+            </button>
+          </Link>
           <button
-            className="p-2 text-green-500 hover:bg-green-50 rounded-full transition-colors"
-            title="Edit"
-          >
-            <FaEdit />
-          </button>
-          <button
-            onClick={() => deleteSkillHandler(p?._id)}
+            onClick={() => deleteProjectHandler(p?._id)}
             className="p-2 text-red-500 hover:bg-red-50 rounded-full transition-colors"
             title="Delete"
           >
-            <FaTrash />
+            <FaTrash className="size-6" />
           </button>
         </div>
       </div>

@@ -6,6 +6,10 @@ export const experienceApi = baseApi.injectEndpoints({
       query: () => '/experience',
       providesTags: ['experience'],
     }),
+    singleExperience: builder.query({
+      query: (id) => `/experience/${id}`,
+      providesTags: ['experience'],
+    }),
     // mutation
     createExperience: builder.mutation({
       query: (data) => ({
@@ -18,7 +22,7 @@ export const experienceApi = baseApi.injectEndpoints({
     updateExperience: builder.mutation({
       query: ({ id, data }) => ({
         url: `/experience/${id}`,
-        method: 'POST',
+        method: 'PUT',
         body: data,
       }),
       invalidatesTags: ['experience'],
@@ -36,6 +40,7 @@ export const experienceApi = baseApi.injectEndpoints({
 export const {
   useCreateExperienceMutation,
   useAllExperiencesQuery,
+  useSingleExperienceQuery,
   useUpdateExperienceMutation,
   useDeleteExperienceMutation,
 } = experienceApi;

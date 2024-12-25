@@ -8,6 +8,10 @@ const projectApi = baseApi.injectEndpoints({
       query: () => '/projects',
       providesTags: ['projects'],
     }),
+    singleProjects: builder.query({
+      query: (id) => `/projects/${id}`,
+      providesTags: ['projects'],
+    }),
     // mutation
     createProject: builder.mutation({
       query: (data) => ({
@@ -71,6 +75,7 @@ export const {
   useCreateProjectMutation,
   useEditProjectMutation,
   useDeleteProjectMutation,
+  useSingleProjectsQuery,
   useAllProjectsCategoryQuery,
   useCreateProjectCategoryMutation,
   useDeleteProjectCategoryMutation,

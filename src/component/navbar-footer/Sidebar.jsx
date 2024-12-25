@@ -13,6 +13,7 @@ import {
 } from 'react-icons/fa';
 import { FaGraduationCap } from 'react-icons/fa6';
 import { useState, useEffect } from 'react';
+import { GiAchievement } from 'react-icons/gi';
 
 const Sidebar = () => {
   const location = useLocation();
@@ -22,7 +23,7 @@ const Sidebar = () => {
   const menuItems = [
     { path: '/dashboard', icon: <FaHome />, title: 'Dashboard' },
     { path: '/dashboard/about', icon: <FaUserCircle />, title: 'About Me' },
-    { path: '/dashboard/skills', icon: <FaTools />, title: 'Skills' },
+    { path: '/dashboard/skills', icon: <GiAchievement />, title: 'Skills' },
     {
       path: '/dashboard/projects',
       icon: <FaProjectDiagram />,

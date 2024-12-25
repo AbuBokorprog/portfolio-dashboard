@@ -1,6 +1,7 @@
 import moment from 'moment';
 import { FaEdit, FaTrash, FaBriefcase } from 'react-icons/fa';
 import { useDeleteExperienceMutation } from '../../redux/features/services/ExperienceApi';
+import { Link } from 'react-router-dom';
 
 const ExperienceCard = ({ experience }) => {
   const {
@@ -57,18 +58,21 @@ const ExperienceCard = ({ experience }) => {
         </div>
 
         <div className="flex items-center space-x-2">
-          <button
-            className="p-2 text-green-500 hover:bg-green-50 rounded-full transition-colors"
-            title="Edit"
-          >
-            <FaEdit />
-          </button>
+          <Link to={`/dashboard/edit-experience/${_id}`}>
+            <button
+              className="p-2 text-green-500 hover:bg-green-50 rounded-full transition-colors"
+              title="Edit"
+            >
+              <FaEdit className="size-6" />
+            </button>
+          </Link>
+
           <button
             onClick={() => deleteExperienceHandler(_id)}
             className="p-2 text-red-500 hover:bg-red-50 rounded-full transition-colors"
             title="Delete"
           >
-            <FaTrash />
+            <FaTrash className="size-6" />
           </button>
         </div>
       </div>

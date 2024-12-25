@@ -1,6 +1,7 @@
 import moment from 'moment';
 import { FaEdit, FaTrash, FaGraduationCap } from 'react-icons/fa';
 import { useDeleteEducationMutation } from '../../redux/features/services/EducationApi';
+import { Link } from 'react-router-dom';
 
 const EducationCard = ({ education }) => {
   const {
@@ -17,7 +18,7 @@ const EducationCard = ({ education }) => {
   } = education;
 
   const [deleteEducation] = useDeleteEducationMutation();
-  const deleteExperienceHandler = async (id) => {
+  const deleteEducationHandler = async (id) => {
     try {
       const res = await deleteEducation(id).unwrap();
       if (res?.success) {
@@ -62,18 +63,20 @@ const EducationCard = ({ education }) => {
         </div>
 
         <div className="flex items-center space-x-2">
+          <Link to={`/dashboard/edit-education/${_id}`}>
+            <button
+              className="p-2 text-green-500 hover:bg-green-50 rounded-full transition-colors"
+              title="Edit"
+            >
+              <FaEdit className="size-6" />
+            </button>
+          </Link>
           <button
-            className="p-2 text-green-500 hover:bg-green-50 rounded-full transition-colors"
-            title="Edit"
-          >
-            <FaEdit />
-          </button>
-          <button
-            onClick={() => deleteExperienceHandler(_id)}
+            onClick={() => deleteEducationHandler(_id)}
             className="p-2 text-red-500 hover:bg-red-50 rounded-full transition-colors"
             title="Delete"
           >
-            <FaTrash />
+            <FaTrash className="size-6" />
           </button>
         </div>
       </div>
