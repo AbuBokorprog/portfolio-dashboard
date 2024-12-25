@@ -9,11 +9,13 @@ import {
   TextField,
   Typography,
   Autocomplete,
+  Chip,
 } from '@mui/material';
 import { useForm, Controller } from 'react-hook-form';
 import {
   useAllProjectsCategoryQuery,
   useCreateProjectMutation,
+  useEditProjectMutation,
   useSingleProjectsQuery,
 } from '../../../redux/features/services/ProjectsApi';
 import { useAllSkillsQuery } from '../../../redux/features/services/SkillsApi';
@@ -29,39 +31,58 @@ const EditProject = () => {
     control,
     reset,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      categoryId: data?.data?.categoryId?._id,
+      projects_name: data?.data?.projects_name,
+      github_url: data?.data?.github_url,
+      short_description: data?.data?.short_description,
+      skills: data?.data?.skills,
+      view_url: data?.data?.view_url,
+    },
+  });
 
   const { data: categories } = useAllProjectsCategoryQuery();
   const { data: skills } = useAllSkillsQuery();
-  const [createProject] = useCreateProjectMutation();
+  const [updateProject] = useEditProjectMutation();
 
   const onSubmit = async (data) => {
+    console.log(data);
     try {
       const formData = new FormData();
-      formData.append('file', data.thumbnail[0]);
+      if (data?.thumbnail) {
+        formData.append('file', data.thumbnail[0]);
+      }
       formData.append(
         'data',
         JSON.stringify({
-          ...data,
-          skills: data.skills.map((skill) => skill.technology_name),
+          skills: data.skills,
+          categoryId: data.categoryId || data?.data?.categoryId?._id,
+          projects_name: data.projects_name,
+          github_url: data.github_url,
+          short_description: data.short_description,
+          view_url: data.view_url,
         })
       );
 
-      const res = await createProject(formData).unwrap();
+      const res = await updateProject({ id: id, data: formData }).unwrap();
       if (res.success) {
         alert(res.message);
         reset();
       }
     } catch (error) {
+      console.log(error);
       alert(error.data?.message || 'Something went wrong');
     }
   };
+
+  const defaultSkills = skills?.data?.map((skill) => skill.technology_name);
 
   return (
     <Container maxWidth="md">
       <Box sx={{ py: 4 }}>
         <Typography variant="h4" component="h1" sx={{ mb: 4 }}>
-          Create New Project
+          Edit Project ({data?.data?.projects_name})
         </Typography>
 
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -70,9 +91,8 @@ const EditProject = () => {
             <TextField
               label="Project Name"
               fullWidth
-              {...register('projects_name', {
-                required: 'Project name is required',
-              })}
+              defaultValue={data?.data?.projects_name}
+              {...register('projects_name')}
               error={!!errors.projects_name}
               helperText={errors.projects_name?.message}
             />
@@ -83,9 +103,13 @@ const EditProject = () => {
               <Controller
                 name="categoryId"
                 control={control}
+                defaultValue={data?.data?.categoryId?._id}
                 rules={{ required: 'Category is required' }}
                 render={({ field }) => (
                   <Select {...field} label="Category">
+                    <MenuItem defaultValue={data?.data?.categoryId?._id}>
+                      {data?.data?.categoryId?.category_name}
+                    </MenuItem>
                     {categories?.data?.map((category) => (
                       <MenuItem key={category._id} value={category._id}>
                         {category.category_name}
@@ -94,29 +118,17 @@ const EditProject = () => {
                   </Select>
                 )}
               />
-              {errors.categoryId && (
-                <Typography
-                  variant="caption"
-                  color="error"
-                  sx={{ mt: 0.5, ml: 2 }}
-                >
-                  {errors.categoryId.message}
-                </Typography>
-              )}
             </FormControl>
 
             {/* Thumbnail Upload */}
+            <img src={data?.data?.thumbnail} alt="" />
             <TextField
               type="file"
               fullWidth
               inputProps={{
                 accept: 'image/*',
               }}
-              {...register('thumbnail', {
-                required: 'Thumbnail is required',
-              })}
-              error={!!errors.thumbnail}
-              helperText={errors.thumbnail?.message}
+              {...register('thumbnail')}
             />
 
             {/* Short Description */}
@@ -124,23 +136,9 @@ const EditProject = () => {
               label="Short Description"
               multiline
               rows={4}
+              defaultValue={data?.data?.short_description}
               fullWidth
-              {...register('short_description', {
-                required: 'Short description is required',
-                minLength: {
-                  value: 200,
-                  message: 'Short description must be at least 200 characters',
-                },
-                maxLength: {
-                  value: 450,
-                  message: 'Short description must not exceed 450 characters',
-                },
-              })}
-              error={!!errors.short_description}
-              helperText={
-                errors.short_description?.message ||
-                'Description should be between 200-450 characters'
-              }
+              {...register('short_description')}
             />
 
             {/* Skills Selection */}
@@ -148,13 +146,12 @@ const EditProject = () => {
               name="skills"
               control={control}
               rules={{ required: 'At least one skill is required' }}
-              defaultValue={[]}
               render={({ field: { onChange, value } }) => (
                 <Autocomplete
                   multiple
-                  options={skills?.data || []}
-                  getOptionLabel={(option) => option.technology_name}
-                  value={value}
+                  options={defaultSkills || []}
+                  getOptionLabel={(option) => option || ''}
+                  value={value || []}
                   onChange={(_, newValue) => onChange(newValue)}
                   renderInput={(params) => (
                     <TextField
@@ -172,6 +169,7 @@ const EditProject = () => {
             <TextField
               label="GitHub URL"
               fullWidth
+              defaultValue={data?.data?.github_url}
               {...register('github_url')}
             />
 
@@ -179,11 +177,8 @@ const EditProject = () => {
             <TextField
               label="View URL"
               fullWidth
-              {...register('view_url', {
-                required: 'View URL is required',
-              })}
-              error={!!errors.view_url}
-              helperText={errors.view_url?.message}
+              defaultValue={data?.data?.view_url}
+              {...register('view_url')}
             />
 
             {/* Submit Button */}
@@ -195,7 +190,7 @@ const EditProject = () => {
                 size="large"
                 fullWidth
               >
-                Create Project
+                Update Project
               </Button>
             </Box>
           </Box>

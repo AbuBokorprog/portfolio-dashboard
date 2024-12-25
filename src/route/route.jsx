@@ -17,6 +17,7 @@ import CreateBlog from '../pages/dashboard/blogs/CreateBlog';
 import EditBlog from '../pages/dashboard/blogs/EditBlog';
 import EditExperience from '../pages/dashboard/expeerience/EditExperience';
 import EditEducation from '../pages/dashboard/educations/EditEducation';
+import EditProject from '../pages/dashboard/projects/EditProject';
 
 const router = createBrowserRouter([
   {
@@ -57,6 +58,10 @@ const router = createBrowserRouter([
       {
         path: 'create-project',
         element: <CreateProject />,
+      },
+      {
+        path: 'edit-project/:id',
+        element: <EditProject />,
       },
       {
         path: 'education',

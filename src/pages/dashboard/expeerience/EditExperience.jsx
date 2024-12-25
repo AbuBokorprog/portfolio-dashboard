@@ -242,7 +242,7 @@ const EditExperience = () => {
                 size="large"
                 fullWidth
               >
-                Add Experience
+                Update Experience
               </Button>
             </Box>
           </Box>
