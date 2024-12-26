@@ -1,4 +1,5 @@
 import {
+  Autocomplete,
   Box,
   Button,
   Container,
@@ -16,6 +17,7 @@ import { useCreateExperienceMutation } from '../../../redux/features/services/Ex
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
+import { useAllSkillsQuery } from '../../../redux/features/services/SkillsApi';
 
 const employmentTypes = [
   'Full-time',
@@ -27,6 +29,7 @@ const employmentTypes = [
 ];
 
 const CreateExperience = () => {
+  const { data: skills } = useAllSkillsQuery();
   const {
     register,
     handleSubmit,
@@ -48,6 +51,7 @@ const CreateExperience = () => {
       // Convert dates to ISO string format
       const formattedData = {
         ...data,
+        technologies: data?.skills?.map((skill) => skill.technology_name),
         startTime: data.startTime.toISOString(),
         endTime: data.isPresent ? null : data.endTime.toISOString(),
       };
@@ -199,6 +203,31 @@ const CreateExperience = () => {
                 )}
               </Box>
             </LocalizationProvider>
+
+            {/* technologies Selection */}
+            <Controller
+              name="technologies"
+              control={control}
+              rules={{ required: 'At least one skill is required' }}
+              defaultValue={[]}
+              render={({ field: { onChange, value } }) => (
+                <Autocomplete
+                  multiple
+                  options={skills?.data || []}
+                  getOptionLabel={(option) => option.technology_name}
+                  value={value}
+                  onChange={(_, newValue) => onChange(newValue)}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Technologies"
+                      error={!!errors.skills}
+                      helperText={errors.skills?.message}
+                    />
+                  )}
+                />
+              )}
+            />
 
             {/* Short Description */}
             <TextField

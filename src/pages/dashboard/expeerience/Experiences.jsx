@@ -46,7 +46,7 @@ const Experiences = () => {
       {/* Experience Cards */}
       <div className="grid gap-6">
         {filteredExperiences?.map((experience) => (
-          <ExperienceCard key={experience.id} experience={experience} />
+          <ExperienceCard key={experience._id} experience={experience} />
         ))}
       </div>
 

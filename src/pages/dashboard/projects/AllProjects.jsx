@@ -85,10 +85,10 @@ const AllProjects = () => {
             </Grid>
             <Grid item xs={6} className="w-1/2">
               <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Category</InputLabel>
+                <InputLabel id="simple-select-label">Category</InputLabel>
                 <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
+                  labelId="simple-select-label"
+                  id="simple-select"
                   value={category}
                   label="Category"
                   onChange={handleChange}

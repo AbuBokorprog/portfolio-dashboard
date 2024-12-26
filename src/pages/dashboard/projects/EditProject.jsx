@@ -11,7 +11,7 @@ import {
   Autocomplete,
   Chip,
 } from '@mui/material';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, useFieldArray } from 'react-hook-form';
 import {
   useAllProjectsCategoryQuery,
   useCreateProjectMutation,
@@ -20,10 +20,21 @@ import {
 } from '../../../redux/features/services/ProjectsApi';
 import { useAllSkillsQuery } from '../../../redux/features/services/SkillsApi';
 import { useParams } from 'react-router-dom';
+import moment from 'moment';
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
+import { Label } from '@mui/icons-material';
 
 const EditProject = () => {
   const { id } = useParams();
   const { data } = useSingleProjectsQuery(id);
+
+  const keyFeaturesDefaultValues = data?.data?.key_features?.map((key) => ({
+    value: key,
+  }));
+  const challengesDefaultValues = data?.data?.challenges?.map((challenge) => ({
+    value: challenge,
+  }));
 
   const {
     register,
@@ -36,10 +47,28 @@ const EditProject = () => {
       categoryId: data?.data?.categoryId?._id,
       projects_name: data?.data?.projects_name,
       github_url: data?.data?.github_url,
+      duration: data?.data?.duration,
+      completion_date: moment(data?.data?.completion_date).toISOString(),
       short_description: data?.data?.short_description,
       skills: data?.data?.skills,
       view_url: data?.data?.view_url,
+      key_features: keyFeaturesDefaultValues || [{}],
+      challenges: challengesDefaultValues || [{}],
     },
+  });
+
+  const { fields, append, prepend, remove } = useFieldArray({
+    control, // control props comes from useForm (optional: if you are using FormProvider)
+    name: 'key_features', // unique name for your Field Array
+  });
+  const {
+    fields: challengesFields,
+    append: challengesAppend,
+    prepend: challengesPrepend,
+    remove: challengesRemove,
+  } = useFieldArray({
+    control, // control props comes from useForm (optional: if you are using FormProvider)
+    name: 'challenges', // unique name for your Field Array
   });
 
   const { data: categories } = useAllProjectsCategoryQuery();
@@ -47,7 +76,6 @@ const EditProject = () => {
   const [updateProject] = useEditProjectMutation();
 
   const onSubmit = async (data) => {
-    console.log(data);
     try {
       const formData = new FormData();
       if (data?.thumbnail) {
@@ -60,6 +88,10 @@ const EditProject = () => {
           categoryId: data.categoryId || data?.data?.categoryId?._id,
           projects_name: data.projects_name,
           github_url: data.github_url,
+          duration: data?.duration,
+          completion_date: moment(data?.data?.completion_date).toISOString(),
+          key_features: data?.key_features?.map((key) => key.value),
+          challenges: data?.challenges?.map((challenge) => challenge.value),
           short_description: data.short_description,
           view_url: data.view_url,
         })
@@ -140,6 +172,124 @@ const EditProject = () => {
               fullWidth
               {...register('short_description')}
             />
+
+            {/* Key features */}
+            <div className="space-y-5">
+              <InputLabel>Key Features:</InputLabel>
+              {fields.map((item, index) => (
+                <FormControl
+                  key={item.id}
+                  sx={{
+                    display: 'grid',
+                    gap: 2,
+                    gridTemplateColumns: '3fr 1fr',
+                  }}
+                >
+                  <Controller
+                    render={({ field }) => (
+                      <TextField {...field} placeholder="Key Feature" />
+                    )}
+                    name={`key_features.${index}.value`}
+                    control={control}
+                  />
+                  <Button
+                    type="button"
+                    variant="outlined"
+                    onClick={() => remove(index)}
+                  >
+                    Delete
+                  </Button>
+                </FormControl>
+              ))}
+              <Button
+                className="my-5"
+                variant="contained"
+                type="button"
+                onClick={() => append({})}
+              >
+                append
+              </Button>
+            </div>
+            {/* challenges */}
+            <div className="space-y-5">
+              <InputLabel>Challenges:</InputLabel>
+              {challengesFields.map((item, index) => (
+                <FormControl
+                  key={item.id}
+                  sx={{
+                    display: 'grid',
+                    gap: 2,
+                    gridTemplateColumns: '3fr 1fr',
+                  }}
+                >
+                  <Controller
+                    render={({ field }) => (
+                      <TextField
+                        {...field}
+                        placeholder="Challenges & Solution"
+                      />
+                    )}
+                    name={`challenges.${index}.value`}
+                    control={control}
+                  />
+                  <Button
+                    type="button"
+                    variant="outlined"
+                    onClick={() => challengesRemove(index)}
+                  >
+                    Delete
+                  </Button>
+                </FormControl>
+              ))}
+              <Button
+                className="my-5"
+                variant="contained"
+                type="button"
+                onClick={() => challengesAppend({})}
+              >
+                append
+              </Button>
+            </div>
+
+            {/* Date Fields */}
+            <LocalizationProvider dateAdapter={AdapterMoment}>
+              <Box
+                sx={{ display: 'grid', gap: 2, gridTemplateColumns: '1fr 1fr' }}
+              >
+                {/* completion Date */}
+                <Controller
+                  name="completion_date"
+                  control={control}
+                  rules={{ required: 'Completion Date is required' }}
+                  render={({ field }) => (
+                    <DatePicker
+                      label="Completion Date"
+                      {...field}
+                      value={field.value ? moment(field.value) : null}
+                      onChange={(date) =>
+                        field.onChange(date ? moment(date).toISOString() : null)
+                      }
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          error={!!errors.completion_date}
+                          helperText={errors.completion_date?.message}
+                        />
+                      )}
+                    />
+                  )}
+                />
+                <TextField
+                  label="Duration"
+                  fullWidth
+                  {...register('duration', {
+                    required: 'Duration is required',
+                  })}
+                  error={!!errors.duration}
+                  helperText={errors.duration?.message}
+                />
+              </Box>
+            </LocalizationProvider>
 
             {/* Skills Selection */}
             <Controller

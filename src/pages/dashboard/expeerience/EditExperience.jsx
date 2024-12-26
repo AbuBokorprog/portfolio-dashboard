@@ -1,4 +1,5 @@
 import {
+  Autocomplete,
   Box,
   Button,
   Container,
@@ -21,6 +22,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { useParams } from 'react-router-dom';
 import moment from 'moment';
+import { useAllSkillsQuery } from '../../../redux/features/services/SkillsApi';
 
 const employmentTypes = [
   'Full-time',
@@ -34,7 +36,7 @@ const employmentTypes = [
 const EditExperience = () => {
   const { id } = useParams();
   const { data } = useSingleExperienceQuery(id);
-
+  const { data: skills } = useAllSkillsQuery();
   const {
     register,
     handleSubmit,
@@ -46,6 +48,7 @@ const EditExperience = () => {
     defaultValues: {
       position: data?.data?.position,
       type: data?.data?.type,
+      technologies: data?.data?.technologies,
       company_location: data?.data?.company_location,
       company_name: data?.data?.company_name,
       short_description: data?.data?.short_description,
@@ -62,9 +65,15 @@ const EditExperience = () => {
     try {
       // Convert dates to ISO string format
       const formattedData = {
-        ...data,
-        // startTime: data.startTime.toISOString(),
-        // endTime: data.isPresent ? null : data.endTime.toISOString(),
+        position: data?.position,
+        type: data?.type,
+        technologies: data?.technologies,
+        company_location: data?.company_location,
+        company_name: data?.company_name,
+        short_description: data?.short_description,
+        startTime: moment(data?.startTime).toISOString(),
+        endTime: moment(data?.endTime).toISOString(),
+        isPresent: data?.isPresent,
       };
 
       const res = await updateExperience({
@@ -79,6 +88,8 @@ const EditExperience = () => {
       alert(error.data?.message || 'Something went wrong');
     }
   };
+
+  const defaultSkills = skills?.data?.map((skill) => skill.technology_name);
 
   return (
     <Container maxWidth="md">
@@ -219,6 +230,25 @@ const EditExperience = () => {
                 )}
               </Box>
             </LocalizationProvider>
+
+            {/* technologies Selection */}
+            <Controller
+              name="technologies"
+              control={control}
+              rules={{}}
+              render={({ field: { onChange, value } }) => (
+                <Autocomplete
+                  multiple
+                  options={defaultSkills || []}
+                  getOptionLabel={(option) => option || ''}
+                  value={value || []}
+                  onChange={(_, newValue) => onChange(newValue)}
+                  renderInput={(params) => (
+                    <TextField {...params} label="Technologies" />
+                  )}
+                />
+              )}
+            />
 
             {/* Short Description */}
             <TextField

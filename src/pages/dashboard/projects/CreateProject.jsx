@@ -10,12 +10,14 @@ import {
   Typography,
   Autocomplete,
 } from '@mui/material';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, useFieldArray } from 'react-hook-form';
 import {
   useAllProjectsCategoryQuery,
   useCreateProjectMutation,
 } from '../../../redux/features/services/ProjectsApi';
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { useAllSkillsQuery } from '../../../redux/features/services/SkillsApi';
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 
 const CreateProject = () => {
   const {
@@ -24,7 +26,26 @@ const CreateProject = () => {
     control,
     reset,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      key_features: [{}],
+      challenges: [{}],
+    },
+  });
+
+  const { fields, append, prepend, remove } = useFieldArray({
+    control, // control props comes from useForm (optional: if you are using FormProvider)
+    name: 'key_features', // unique name for your Field Array
+  });
+  const {
+    fields: challengesFields,
+    append: challengesAppend,
+    prepend: challengesPrepend,
+    remove: challengesRemove,
+  } = useFieldArray({
+    control, // control props comes from useForm (optional: if you are using FormProvider)
+    name: 'challenges', // unique name for your Field Array
+  });
 
   const { data: categories } = useAllProjectsCategoryQuery();
   const { data: skills } = useAllSkillsQuery();
@@ -39,6 +60,9 @@ const CreateProject = () => {
         JSON.stringify({
           ...data,
           skills: data.skills.map((skill) => skill.technology_name),
+          completion_date: data.completion_date.toISOString(),
+          key_features: data?.key_features?.map((key) => key.value),
+          challenges: data?.key_features?.map((challenge) => challenge.value),
         })
       );
 
@@ -137,6 +161,117 @@ const CreateProject = () => {
                 'Description should be between 200-450 characters'
               }
             />
+            {/* Key features */}
+            <div className="space-y-5">
+              {fields.map((item, index) => (
+                <FormControl
+                  key={item.id}
+                  sx={{
+                    display: 'grid',
+                    gap: 2,
+                    gridTemplateColumns: '3fr 1fr',
+                  }}
+                >
+                  <Controller
+                    render={({ field }) => (
+                      <TextField {...field} placeholder="Key Feature" />
+                    )}
+                    name={`key_features.${index}.value`}
+                    control={control}
+                  />
+                  <Button
+                    type="button"
+                    variant="outlined"
+                    onClick={() => remove(index)}
+                  >
+                    Delete
+                  </Button>
+                </FormControl>
+              ))}
+              <Button
+                className="my-5"
+                variant="contained"
+                type="button"
+                onClick={() => append({})}
+              >
+                append
+              </Button>
+            </div>
+            {/* challenges */}
+            <div className="space-y-5">
+              {challengesFields.map((item, index) => (
+                <FormControl
+                  key={item.id}
+                  sx={{
+                    display: 'grid',
+                    gap: 2,
+                    gridTemplateColumns: '3fr 1fr',
+                  }}
+                >
+                  <Controller
+                    render={({ field }) => (
+                      <TextField
+                        {...field}
+                        placeholder="Challenges & Solution"
+                      />
+                    )}
+                    name={`challenges.${index}.value`}
+                    control={control}
+                  />
+                  <Button
+                    type="button"
+                    variant="outlined"
+                    onClick={() => challengesRemove(index)}
+                  >
+                    Delete
+                  </Button>
+                </FormControl>
+              ))}
+              <Button
+                className="my-5"
+                variant="contained"
+                type="button"
+                onClick={() => challengesAppend({})}
+              >
+                append
+              </Button>
+            </div>
+
+            {/* Date Fields */}
+            <LocalizationProvider dateAdapter={AdapterMoment}>
+              <Box
+                sx={{ display: 'grid', gap: 2, gridTemplateColumns: '1fr 1fr' }}
+              >
+                {/* completion Date */}
+                <Controller
+                  name="completion_date"
+                  control={control}
+                  rules={{ required: 'Completion Date is required' }}
+                  render={({ field }) => (
+                    <DatePicker
+                      label="Completion Date"
+                      {...field}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          error={!!errors.completion_date}
+                          helperText={errors.completion_date?.message}
+                        />
+                      )}
+                    />
+                  )}
+                />
+                <TextField
+                  label="Duration"
+                  fullWidth
+                  {...register('duration', {
+                    required: 'Duration is required',
+                  })}
+                  error={!!errors.duration}
+                  helperText={errors.duration?.message}
+                />
+              </Box>
+            </LocalizationProvider>
 
             {/* Skills Selection */}
             <Controller

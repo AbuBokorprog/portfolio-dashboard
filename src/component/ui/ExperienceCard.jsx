@@ -14,6 +14,7 @@ const ExperienceCard = ({ experience }) => {
     endTime,
     isPresent,
     company_location,
+    technologies,
   } = experience;
 
   const [deleteExperience] = useDeleteExperienceMutation();
@@ -82,6 +83,18 @@ const ExperienceCard = ({ experience }) => {
           {short_description}
         </p>
       </div>
+      {technologies && (
+        <div className="flex flex-wrap gap-2 mt-4">
+          {technologies?.map((tech, index) => (
+            <span
+              key={index}
+              className="px-3 py-1 text-sm bg-gray-100  rounded-full text-gray-700 "
+            >
+              {tech}
+            </span>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
