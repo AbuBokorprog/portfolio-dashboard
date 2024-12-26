@@ -14,8 +14,11 @@ import {
 import { FaGraduationCap } from 'react-icons/fa6';
 import { useState, useEffect } from 'react';
 import { GiAchievement } from 'react-icons/gi';
+import { useDispatch } from 'react-redux';
+import { logout } from '../../redux/features/Slice/AuthSlice';
 
 const Sidebar = () => {
+  const dispatch = useDispatch();
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
@@ -62,6 +65,11 @@ const Sidebar = () => {
   // Toggle sidebar
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
+  };
+
+  const logoutHandler = () => {
+    dispatch(logout());
+    alert('Logout');
   };
 
   return (
@@ -121,7 +129,10 @@ const Sidebar = () => {
             />
             <div>
               <p className="text-sm font-medium">Admin Name</p>
-              <button className="text-xs text-red-400 hover:text-red-500">
+              <button
+                onClick={logoutHandler}
+                className="text-xs text-red-400 hover:text-red-500"
+              >
                 Logout
               </button>
             </div>
