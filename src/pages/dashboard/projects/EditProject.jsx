@@ -9,12 +9,10 @@ import {
   TextField,
   Typography,
   Autocomplete,
-  Chip,
 } from '@mui/material';
 import { useForm, Controller, useFieldArray } from 'react-hook-form';
 import {
   useAllProjectsCategoryQuery,
-  useCreateProjectMutation,
   useEditProjectMutation,
   useSingleProjectsQuery,
 } from '../../../redux/features/services/ProjectsApi';
@@ -23,7 +21,6 @@ import { useParams } from 'react-router-dom';
 import moment from 'moment';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
-import { Label } from '@mui/icons-material';
 
 const EditProject = () => {
   const { id } = useParams();
@@ -57,14 +54,13 @@ const EditProject = () => {
     },
   });
 
-  const { fields, append, prepend, remove } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control, // control props comes from useForm (optional: if you are using FormProvider)
     name: 'key_features', // unique name for your Field Array
   });
   const {
     fields: challengesFields,
     append: challengesAppend,
-    prepend: challengesPrepend,
     remove: challengesRemove,
   } = useFieldArray({
     control, // control props comes from useForm (optional: if you are using FormProvider)

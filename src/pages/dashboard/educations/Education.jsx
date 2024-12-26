@@ -14,7 +14,7 @@ const Education = () => {
       edu.degree.toLowerCase().includes(searchTerm.toLowerCase()) ||
       edu.institution.toLowerCase().includes(searchTerm.toLowerCase())
   );
-  console.log(educations?.data?.length);
+
   return (
     <div className="space-y-6">
       {/* Header */}

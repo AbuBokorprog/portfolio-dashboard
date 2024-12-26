@@ -33,14 +33,14 @@ const CreateProject = () => {
     },
   });
 
-  const { fields, append, prepend, remove } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control, // control props comes from useForm (optional: if you are using FormProvider)
     name: 'key_features', // unique name for your Field Array
   });
   const {
     fields: challengesFields,
     append: challengesAppend,
-    prepend: challengesPrepend,
+
     remove: challengesRemove,
   } = useFieldArray({
     control, // control props comes from useForm (optional: if you are using FormProvider)

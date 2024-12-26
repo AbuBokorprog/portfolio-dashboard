@@ -11,7 +11,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, useFieldArray } from 'react-hook-form';
 import {
   useSingleEducationsQuery,
   useUpdateEducationMutation,
@@ -36,7 +36,12 @@ const degrees = [
 const EditEducation = () => {
   const { id } = useParams();
   const { data } = useSingleEducationsQuery(id);
-
+  const achievementsDefaultValues = data?.data?.achievements?.map((key) => ({
+    value: key,
+  }));
+  const coursesDefaultValues = data?.data?.courses?.map((challenge) => ({
+    value: challenge,
+  }));
   const {
     register,
     handleSubmit,
@@ -55,7 +60,22 @@ const EditEducation = () => {
       startTime: moment(data?.data?.startTime).toISOString(),
       endTime: moment(data?.data?.endTime).toISOString(),
       isPresent: data?.data?.isPresent,
+      achievements: achievementsDefaultValues || [{}],
+      courses: coursesDefaultValues || [{}],
     },
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control, // control props comes from useForm (optional: if you are using FormProvider)
+    name: 'achievements', // unique name for your Field Array
+  });
+  const {
+    fields: coursesFields,
+    append: coursesAppend,
+    remove: coursesRemove,
+  } = useFieldArray({
+    control, // control props comes from useForm (optional: if you are using FormProvider)
+    name: 'courses', // unique name for your Field Array
   });
 
   const [updateEducation] = useUpdateEducationMutation();
@@ -68,6 +88,9 @@ const EditEducation = () => {
         ...data,
         // startTime: data.startTime.toISOString(),
         // endTime: data.isPresent ? null : data.endTime.toISOString(),
+        achievements:
+          data?.achievements?.map((achievement) => achievement.value) || [],
+        courses: data?.courses?.map((courses) => courses.value) || [],
       };
 
       const res = await updateEducation({
@@ -235,7 +258,80 @@ const EditEducation = () => {
                 )}
               </Box>
             </LocalizationProvider>
-
+            {/* achievements */}
+            <div className="space-y-5">
+              <InputLabel>Achievements:</InputLabel>
+              {fields.map((item, index) => (
+                <FormControl
+                  key={item.id}
+                  sx={{
+                    display: 'grid',
+                    gap: 2,
+                    gridTemplateColumns: '3fr 1fr',
+                  }}
+                >
+                  <Controller
+                    render={({ field }) => (
+                      <TextField {...field} placeholder="Achievements" />
+                    )}
+                    name={`achievements.${index}.value`}
+                    control={control}
+                  />
+                  <Button
+                    type="button"
+                    variant="outlined"
+                    onClick={() => remove(index)}
+                  >
+                    Delete
+                  </Button>
+                </FormControl>
+              ))}
+              <Button
+                className="my-5"
+                variant="contained"
+                type="button"
+                onClick={() => append({})}
+              >
+                append
+              </Button>
+            </div>
+            {/* courses */}
+            <div className="space-y-5">
+              <InputLabel>Courses:</InputLabel>
+              {coursesFields.map((item, index) => (
+                <FormControl
+                  key={item.id}
+                  sx={{
+                    display: 'grid',
+                    gap: 2,
+                    gridTemplateColumns: '3fr 1fr',
+                  }}
+                >
+                  <Controller
+                    render={({ field }) => (
+                      <TextField {...field} placeholder="Courses" />
+                    )}
+                    name={`courses.${index}.value`}
+                    control={control}
+                  />
+                  <Button
+                    type="button"
+                    variant="outlined"
+                    onClick={() => coursesRemove(index)}
+                  >
+                    Delete
+                  </Button>
+                </FormControl>
+              ))}
+              <Button
+                className="my-5"
+                variant="contained"
+                type="button"
+                onClick={() => coursesAppend({})}
+              >
+                append
+              </Button>
+            </div>
             {/* Short Description (Optional) */}
             <TextField
               label="Description (Optional)"
